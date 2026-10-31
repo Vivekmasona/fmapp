@@ -19,11 +19,10 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    - name: Initialize Capacitor and Build Android
+    - name: Add Capacitor Android Platform
       run: |
-        npx cap init "VFY FM Studio" "com.vfy.fmstudio" --web-dir "." --yes
-        npx cap add android
-        npx cap sync android
+        npx --no-install cap add android || npx @capacitor/cli add android
+        npx --no-install cap sync android || npx @capacitor/cli sync android
 
     - name: Build APK with Gradle
       run: |
@@ -36,4 +35,3 @@ jobs:
       with:
         name: app-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
-        
