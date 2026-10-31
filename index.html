@@ -106,7 +106,6 @@ button:hover { opacity: 0.95; transform: translateY(-1px); }
 }
 #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-/* Developer signature fixed height 20px */
 .dev-sig { height: 20px; line-height: 20px; font-size: 9px; color: rgba(255,255,255,0.3); text-align: center; letter-spacing: 1px; text-transform: uppercase; margin-top: auto; flex-shrink: 0; }
 </style>
 </head>
@@ -175,6 +174,34 @@ button:hover { opacity: 0.95; transform: translateY(-1px); }
 <script src="https://codepen.io/Tibixx/pen/BbBxRG.js"></script>
 
 <script>
+const BASE_URL = "https://live-fm.vercel.app";
+
+// Smart fetch wrapper to automatically append base URL to /api/... requests
+const originalFetch = window.fetch;
+window.fetch = async function(resource, init) {
+  if (typeof resource === 'string' && resource.startsWith('/api/')) {
+    resource = BASE_URL + resource;
+  }
+  return originalFetch(resource, init);
+};
+
+// Background freeze prevention for Android
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    if (audioEl.paused && globalPlaylist.length > 0) {
+      audioEl.play().catch(e => console.log("Resumed"));
+    }
+  }
+});
+
+setInterval(() => {
+  if (audioEl && !audioEl.paused) {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+    }
+  }
+}, 5000);
+
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 w = ctx.canvas.width = window.innerWidth;
@@ -306,12 +333,6 @@ function scheduleNextSync() {
     syncTimeout = setTimeout(pollGlobalState, 30000);
   }
 }
-
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    pollGlobalState();
-  }
-});
 
 function renderPlaylistUI() {
   const container = document.getElementById("playlist-container");
@@ -569,3 +590,5 @@ function averageFrequency() { var avg = 0; for (let i = 0; i < frequencyData.len
 
 </body>
 </html>
+
+
