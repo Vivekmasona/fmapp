@@ -21,8 +21,8 @@ jobs:
 
     - name: Add Capacitor Android Platform
       run: |
-        npx --no-install cap add android || npx @capacitor/cli add android
-        npx --no-install cap sync android || npx @capacitor/cli sync android
+        npx @capacitor/cli add android
+        npx @capacitor/cli sync android
 
     - name: Build APK with Gradle
       run: |
