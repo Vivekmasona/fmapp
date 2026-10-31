@@ -1,9 +1,9 @@
 {
   "appId": "com.vfy.fmstudio",
   "appName": "VFY FM Studio",
-  "webDir": ".",
+  "webDir": "www",
   "server": {
-    "url": "https://apka-vercel-app-url.vercel.app",
+    "url": "https://live-fm.vercel.app",
     "cleartext": true
   }
 }
