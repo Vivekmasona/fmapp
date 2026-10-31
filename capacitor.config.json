@@ -5,5 +5,11 @@
   "server": {
     "url": "https://live-fm.vercel.app",
     "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
   }
 }
+
