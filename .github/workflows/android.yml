@@ -40,10 +40,31 @@ jobs:
       run: |
         npx @capacitor/cli add android
 
-    - name: Generate App Icon
+    - name: Force Apply Custom Icon from img/fm.png
       run: |
-        npm install @capacitor/assets --save-dev
-        npx @capacitor/assets generate --icon img/fm.png --android || echo "Icon generation skipped, proceeding with default"
+        # Android mipmap folders mein custom icon ko copy karna
+        mkdir -p android/app/src/main/res/mipmap-mdpi
+        mkdir -p android/app/src/main/res/mipmap-hdpi
+        mkdir -p android/app/src/main/res/mipmap-xhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+        
+        if [ -f img/fm.png ]; then
+          cp img/fm.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp img/fm.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp img/fm.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp img/fm.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp img/fm.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          cp img/fm.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+          cp img/fm.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+          cp img/fm.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+          cp img/fm.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+          cp img/fm.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+          echo "Custom icon applied successfully!"
+        else
+          echo "Error: img/fm.png not found!"
+          exit 1
+        fi
 
     - name: Sync Capacitor Android
       run: |
