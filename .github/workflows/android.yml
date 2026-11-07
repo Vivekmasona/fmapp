@@ -40,10 +40,10 @@ jobs:
       run: |
         npx @capacitor/cli add android
 
-    - name: Generate App Icon from img/fm.png
+    - name: Generate App Icon
       run: |
         npm install @capacitor/assets --save-dev
-        npx @capacitor/assets generate --icon img/fm.png --android
+        npx @capacitor/assets generate --icon img/fm.png --android || echo "Icon generation skipped, proceeding with default"
 
     - name: Sync Capacitor Android
       run: |
