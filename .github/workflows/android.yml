@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v4
+      uses: setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -25,10 +25,6 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
-    - name: Set App Name in Capacitor Config
-      run: |
-        npx @capacitor/cli config set appName "VFyFm"
-
     - name: Auto Create www Folder & Move index.html
       run: |
         mkdir -p www
@@ -40,27 +36,37 @@ jobs:
       run: |
         npx @capacitor/cli add android
 
-    - name: Force Apply Custom Icon from img/fm.png
+    - name: Completely Replace Default Icons with img/fm.png
       run: |
-        # Android mipmap folders mein custom icon ko copy karna
-        mkdir -p android/app/src/main/res/mipmap-mdpi
-        mkdir -p android/app/src/main/res/mipmap-hdpi
-        mkdir -p android/app/src/main/res/mipmap-xhdpi
-        mkdir -p android/app/src/main/res/mipmap-xxhdpi
-        mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+        RES_DIR="android/app/src/main/res"
+        
+        # Purane saare default icons (webp/png/xml) ko delete karna taaki conflict na ho
+        rm -rf $RES_DIR/mipmap-*/*
+        
+        # Har density folder ke liye mipmap directories ensure karna
+        mkdir -p $RES_DIR/mipmap-mdpi
+        mkdir -p $RES_DIR/mipmap-hdpi
+        mkdir -p $RES_DIR/mipmap-xhdpi
+        mkdir -p $RES_DIR/mipmap-xxhdpi
+        mkdir -p $RES_DIR/mipmap-xxxhdpi
         
         if [ -f img/fm.png ]; then
-          cp img/fm.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-          cp img/fm.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-          cp img/fm.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-          cp img/fm.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-          cp img/fm.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-          cp img/fm.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
-          cp img/fm.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
-          cp img/fm.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
-          cp img/fm.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
-          cp img/fm.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
-          echo "Custom icon applied successfully!"
+          # Har folder mein icon copy karna
+          cp img/fm.png $RES_DIR/mipmap-mdpi/ic_launcher.png
+          cp img/fm.png $RES_DIR/mipmap-hdpi/ic_launcher.png
+          cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher.png
+          cp img/fm.png $RES_DIR/mipmap-xxhdpi/ic_launcher.png
+          cp img/fm.png $RES_DIR/mipmap-xxxhdpi/ic_launcher.png
+          
+          cp img/fm.png $RES_DIR/mipmap-mdpi/ic_launcher_round.png
+          cp img/fm.png $RES_DIR/mipmap-hdpi/ic_launcher_round.png
+          cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher_round.png
+          cp img/fm.png $RES_DIR/mipmap-xxhdpi/ic_launcher_round.png
+          cp img/fm.png $RES_DIR/mipmap-xxxhdpi/ic_launcher_round.png
+          
+          # Adaptive icons ko disable karne ke liye AndroidManifest ya values se purane references hata sakte hain, 
+          # par direct PNG copy hone se standard launcher isko utha lega.
+          echo "Custom icon forced successfully!"
         else
           echo "Error: img/fm.png not found!"
           exit 1
@@ -79,5 +85,5 @@ jobs:
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: VFyFm-debug
+        name: VFY-FM-Studio-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
