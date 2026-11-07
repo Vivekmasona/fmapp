@@ -36,21 +36,36 @@ jobs:
       run: |
         npx @capacitor/cli add android
 
-    - name: Force Apply Custom Icon from img/fm.png
+    - name: Force Apply Same Image (img/fm.png) for Icon and Splash
       run: |
         RES_DIR="android/app/src/main/res"
         
-        # Purane saare default icons delete karna
+        # 1. Purane icons aur splash delete karna
         rm -rf $RES_DIR/mipmap-*/*
+        rm -rf $RES_DIR/drawable*/*
         
-        # Mipmap folders ensure karna
+        # 2. Mipmap (Icon) folders ensure karna aur copy karna
         mkdir -p $RES_DIR/mipmap-mdpi
         mkdir -p $RES_DIR/mipmap-hdpi
         mkdir -p $RES_DIR/mipmap-xhdpi
         mkdir -p $RES_DIR/mipmap-xxhdpi
         mkdir -p $RES_DIR/mipmap-xxxhdpi
         
+        # 3. Drawable (Splash screen background/image) folders ensure karna
+        mkdir -p $RES_DIR/drawable
+        mkdir -p $RES_DIR/drawable-land-mdpi
+        mkdir -p $RES_DIR/drawable-land-hdpi
+        mkdir -p $RES_DIR/drawable-land-xhdpi
+        mkdir -p $RES_DIR/drawable-land-xxhdpi
+        mkdir -p $RES_DIR/drawable-land-xxxhdpi
+        mkdir -p $RES_DIR/drawable-port-mdpi
+        mkdir -p $RES_DIR/drawable-port-hdpi
+        mkdir -p $RES_DIR/drawable-port-xhdpi
+        mkdir -p $RES_DIR/drawable-port-xxhdpi
+        mkdir -p $RES_DIR/drawable-port-xxxhdpi
+
         if [ -f img/fm.png ]; then
+          # Icons copy karna
           cp img/fm.png $RES_DIR/mipmap-mdpi/ic_launcher.png
           cp img/fm.png $RES_DIR/mipmap-hdpi/ic_launcher.png
           cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher.png
@@ -62,7 +77,16 @@ jobs:
           cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher_round.png
           cp img/fm.png $RES_DIR/mipmap-xxhdpi/ic_launcher_round.png
           cp img/fm.png $RES_DIR/mipmap-xxxhdpi/ic_launcher_round.png
-          echo "Custom icon applied successfully!"
+
+          # Splash screen image copy karna (drawable folders mein)
+          cp img/fm.png $RES_DIR/drawable/splash.png
+          cp img/fm.png $RES_DIR/drawable-port-mdpi/splash.png
+          cp img/fm.png $RES_DIR/drawable-port-hdpi/splash.png
+          cp img/fm.png $RES_DIR/drawable-port-xhdpi/splash.png
+          cp img/fm.png $RES_DIR/drawable-port-xxhdpi/splash.png
+          cp img/fm.png $RES_DIR/drawable-port-xxxhdpi/splash.png
+          
+          echo "Icon and Splash successfully applied using img/fm.png!"
         else
           echo "Error: img/fm.png not found!"
           exit 1
