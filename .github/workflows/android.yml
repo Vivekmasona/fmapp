@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up JDK 17
-      uses: setup-java@v4
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -36,14 +36,14 @@ jobs:
       run: |
         npx @capacitor/cli add android
 
-    - name: Completely Replace Default Icons with img/fm.png
+    - name: Force Apply Custom Icon from img/fm.png
       run: |
         RES_DIR="android/app/src/main/res"
         
-        # Purane saare default icons (webp/png/xml) ko delete karna taaki conflict na ho
+        # Purane saare default icons delete karna
         rm -rf $RES_DIR/mipmap-*/*
         
-        # Har density folder ke liye mipmap directories ensure karna
+        # Mipmap folders ensure karna
         mkdir -p $RES_DIR/mipmap-mdpi
         mkdir -p $RES_DIR/mipmap-hdpi
         mkdir -p $RES_DIR/mipmap-xhdpi
@@ -51,7 +51,6 @@ jobs:
         mkdir -p $RES_DIR/mipmap-xxxhdpi
         
         if [ -f img/fm.png ]; then
-          # Har folder mein icon copy karna
           cp img/fm.png $RES_DIR/mipmap-mdpi/ic_launcher.png
           cp img/fm.png $RES_DIR/mipmap-hdpi/ic_launcher.png
           cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher.png
@@ -63,10 +62,7 @@ jobs:
           cp img/fm.png $RES_DIR/mipmap-xhdpi/ic_launcher_round.png
           cp img/fm.png $RES_DIR/mipmap-xxhdpi/ic_launcher_round.png
           cp img/fm.png $RES_DIR/mipmap-xxxhdpi/ic_launcher_round.png
-          
-          # Adaptive icons ko disable karne ke liye AndroidManifest ya values se purane references hata sakte hain, 
-          # par direct PNG copy hone se standard launcher isko utha lega.
-          echo "Custom icon forced successfully!"
+          echo "Custom icon applied successfully!"
         else
           echo "Error: img/fm.png not found!"
           exit 1
